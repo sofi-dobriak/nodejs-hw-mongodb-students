@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-export function getEnvVar(name: string): string | undefined {
+export function getEnvVar(name: string): string {
   const value: string | undefined = process.env[name];
 
   if (value) return value;
