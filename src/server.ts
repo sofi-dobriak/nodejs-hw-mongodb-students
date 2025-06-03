@@ -2,6 +2,7 @@ import express, { Express, Request, Response, NextFunction } from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
 import { getEnvVar } from './utils/getEnvVar';
+import { getAllStudents, getStudentById } from './services/students';
 
 const PORT: number = Number(getEnvVar('PORT'));
 
@@ -11,13 +12,13 @@ export const startServer = (): void => {
   app.use(express.json());
   app.use(cors());
 
-  app.use(
-    pino({
-      transport: {
-        target: 'pino-pretty',
-      },
-    }),
-  );
+  // app.use(
+  //   pino({
+  //     transport: {
+  //       target: 'pino-pretty',
+  //     },
+  //   }),
+  // );
 
   app.use((req: Request, res: Response, next: NextFunction): void => {
     console.log(`Time: ${new Date().toLocaleString()}`);
@@ -29,6 +30,34 @@ export const startServer = (): void => {
       message: 'Hello, student!',
     });
   });
+
+  app.get('/students', async (req: Request, res: Response): Promise<void> => {
+    const students = await getAllStudents();
+
+    res.status(200).json({
+      data: students,
+    });
+  });
+
+  app.get(
+    '/students/:studentId',
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const { studentId } = req.params;
+      const student = await getStudentById(studentId);
+
+      if (!student) {
+        res.status(404).json({
+          message: 'Student not found',
+        });
+
+        return;
+      }
+
+      res.status(200).json({
+        data: student,
+      });
+    },
+  );
 
   app.use(/.*/, (req: Request, res: Response, next: NextFunction): void => {
     res.status(404).json({
