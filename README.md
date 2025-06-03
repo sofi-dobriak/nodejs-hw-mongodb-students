@@ -1,1 +1,1 @@
-Template for node.js applications
+Practical training during the lecture
