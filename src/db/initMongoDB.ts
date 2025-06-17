@@ -1,12 +1,13 @@
 import mongoose from 'mongoose';
 import { getEnvVar } from '../utils/getEnvVar';
+import { MONGO_CONSTANTS } from '../constants/constants';
 
 export const initMongoDB = async (): Promise<void> => {
   try {
-    const user: string | undefined = getEnvVar('MONGODB_USER');
-    const password: string | undefined = getEnvVar('MONGODB_PASSWORD');
-    const url: string | undefined = getEnvVar('MONGODB_URL');
-    const db: string | undefined = getEnvVar('MONGODB_DB');
+    const user: string | undefined = getEnvVar(MONGO_CONSTANTS.USER);
+    const password: string | undefined = getEnvVar(MONGO_CONSTANTS.PASSWORD);
+    const url: string | undefined = getEnvVar(MONGO_CONSTANTS.URL);
+    const db: string | undefined = getEnvVar(MONGO_CONSTANTS.DB);
 
     if (!user || !password || !url || !db) {
       throw new Error(
