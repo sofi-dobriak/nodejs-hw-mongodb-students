@@ -14,37 +14,44 @@ import {
   updateStudentSchema,
 } from '../validation/students';
 import { isValidId } from '../middlewares/isValidId';
+import { authenticate } from '../middlewares/authenticate';
 
-const router = Router();
+const studentRouter = Router();
 
-router.get('/students', ctrlWrapper(getStudentsController));
+studentRouter.use('/students', authenticate);
 
-router.get(
+studentRouter.get('/students', ctrlWrapper(getStudentsController));
+
+studentRouter.get(
   '/students/:studentId',
   isValidId,
   ctrlWrapper(getStudentByIdController),
 );
 
-router.post(
+studentRouter.post(
   '/students',
   validateBody(createStudentSchema),
   ctrlWrapper(createStudentController),
 );
 
-router.delete('/students/:studentId', ctrlWrapper(deleteStudentController));
+studentRouter.delete(
+  '/students/:studentId',
+  ctrlWrapper(deleteStudentController),
+);
 
-router.put(
+studentRouter.put(
   '/students/:studentId',
   isValidId,
   validateBody(updateStudentSchema),
   ctrlWrapper(upsertStudentController),
 );
 
-router.patch(
+studentRouter.patch(
   '/students/:studentId',
   isValidId,
   validateBody(updateStudentSchema),
   ctrlWrapper(patchStudentController),
 );
 
-export default router;
+export default studentRouter;
+studentRouter;
